@@ -28,27 +28,28 @@ int main() {
 
         float deltaTime = clock.restart().asSeconds();         // Time since last frame
 
-//============================================================================================================================================================
-/// Movement & collision control
-//============================================================================================================================================================        
+        //============================================================================================================================================================
+        /// Movement & collision control
+        //============================================================================================================================================================        
+        float rotationSpeed = 120.f;
+        float speed = car.getSpeed();
+
+        // --- Rotate ---
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+            car.rotate(-rotationSpeed * deltaTime);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+            car.rotate(rotationSpeed * deltaTime);
 
         // --- Movement ---
-        sf::Vector2f move(0.f, 0.f);
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) 
-            move.x -= car.getSpeed() * deltaTime; 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) 
-            move.x += car.getSpeed() * deltaTime;        
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) 
-            move.y -= car.getSpeed() * deltaTime;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) 
-            move.y += car.getSpeed() * deltaTime;
-        
-        car.move(move);
-
+        sf::Vector2f dir = car.getDirection();
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+            car.move(dir * car.getSpeed() * deltaTime);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+            car.move(-dir * car.getSpeed() * deltaTime);
+                
         // --- Collision ---
 
-//============================================================================================================================================================
+        //============================================================================================================================================================
 
         window.clear(sf::Color::Green);  // background
         track.draw(window);

@@ -4,16 +4,27 @@
 class Car
 {
     public:
+    
+        // Constructor(s)
         Car();
-        void handleInput(float deltaTime);
+
+        // Methods
+        void handleInput(float deltaTime);      
         void draw(sf::RenderWindow& window);
+        void move(const sf::Vector2f& offset);
+        void rotate(float angle);
+
+        // Getters
+        sf::Vector2f getDirection() const;  
         sf::FloatRect getBounds() const;
         sf::Vector2f getPosition() const;
-        void setPosition(const sf::Vector2f& pos);
-        void move(const sf::Vector2f& offset);
         float getSpeed() const;
+        
+        // Setters
+        void setPosition(const sf::Vector2f& pos);
 
-    private:
+
+    private:        
         sf::RectangleShape shape;
         float speed;
 };
