@@ -31,24 +31,19 @@ int main() {
         //============================================================================================================================================================
         /// Movement & collision control
         //============================================================================================================================================================        
-        float rotationSpeed = 120.f;
-        float speed = car.getSpeed();
+        float rotationSpeed = 180.f;
 
-        // --- Rotate ---
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-            car.rotate(-rotationSpeed * deltaTime);
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-            car.rotate(rotationSpeed * deltaTime);
+        car.handleInput(deltaTime, rotationSpeed);
 
-        // --- Movement ---
-        sf::Vector2f dir = car.getDirection();
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-            car.move(dir * car.getSpeed() * deltaTime);
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-            car.move(-dir * car.getSpeed() * deltaTime);
-                
         // --- Collision ---
+        sf::Vector2f pos = car.getPosition();
+        sf::Vector2f halfSize(car.getSize().x / 2.f, car.getSize().y / 2.f);
 
+        // Clamp to window boundaries
+        pos.x = std::clamp(pos.x, halfSize.x, 800.f - halfSize.x);
+        pos.y = std::clamp(pos.y, halfSize.y, 600.f - halfSize.y);
+
+        car.setPosition(pos);
         //============================================================================================================================================================
 
         window.clear(sf::Color::Green);  // background

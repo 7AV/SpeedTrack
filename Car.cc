@@ -1,6 +1,6 @@
 #include "Car.hh"
 #include <cmath>
-
+#include <iostream>
 
 Car::Car()
 {
@@ -9,21 +9,43 @@ Car::Car()
     shape.setFillColor(sf::Color::Red);
     shape.setPosition(375.f, 285.f);
     shape.setOrigin(shape.getSize().x / 2.f, shape.getSize().y / 2.f); // This ensures rotation happens around the middle of the car
-    speed = 200.f;    // pixels per second 
+    
+    acceleration = 300.f;
+    maxSpeed = 500.f;    // pixels per second 
+    velocity = 0.f;
 }
 
-void Car::handleInput(float deltaTime)
+void Car::handleInput(float deltaTime, float rotationSpeed)
 {
-    // Input handling
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-        shape.move(0.f, speed * deltaTime);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-        shape.move(0.f, -speed * deltaTime);        
+    // Rotate
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-        shape.move(-speed * deltaTime, 0.f);
+        rotate(-rotationSpeed * deltaTime);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-        shape.move(speed * deltaTime, 0.f);
+        rotate(rotationSpeed * deltaTime);
+
+    // Accelerate / Decelerate
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+        velocity += acceleration * deltaTime;
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+        velocity -= acceleration * deltaTime;
+    else
+        velocity *= 0.95f; // friction
+
+    // Clamp velocity
+    if (velocity > maxSpeed)
+        velocity = maxSpeed;
+    if (velocity < -maxSpeed)
+        velocity = -maxSpeed;
+
+    // Move along facing direction
+    sf::Vector2f dir = getDirection();
+    sf::Vector2f movement(dir.x * velocity * deltaTime, dir.y * velocity * deltaTime);
+    shape.move(movement);    
+
+    // Debugging
+    //std::cout << "Velocity: " << velocity << '\n';
 }
+
 
 void Car::draw(sf::RenderWindow& window)
 {
@@ -52,21 +74,25 @@ sf::Vector2f Car::getDirection() const
     return sf::Vector2f(std::cos(rad), std::sin(rad));
 }
 
-sf::FloatRect Car::getBounds() const
-{
-    return shape.getGlobalBounds();
-}
-
 sf::Vector2f Car::getPosition() const
 {
     return shape.getPosition();
 }
 
-float Car::getSpeed() const
+sf::Vector2f Car::getSize() const
 {
-    return speed;
+    return shape.getSize();
 }
 
+sf::FloatRect Car::getBounds() const
+{
+    return shape.getGlobalBounds();
+}
+
+float Car::getSpeed() const
+{
+    return velocity;
+}
 
 //============================================================================================================================================================
 // SETTERS
