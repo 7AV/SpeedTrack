@@ -31,3 +31,23 @@ sf::FloatRect Car::getBounds() const
 {
     return shape.getGlobalBounds();
 }
+
+sf::Vector2f Car::getPosition() const
+{
+    return shape.getPosition();
+}
+
+void Car::setPosition(const sf::Vector2f& pos)
+{
+    return shape.setPosition(pos);
+}
+
+void Car::move(const sf::Vector2f& offset)
+{
+    return shape.move(offset);
+}
+
+float Car::getSpeed() const
+{
+    return speed;
+}

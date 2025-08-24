@@ -26,3 +26,23 @@ const sf::RectangleShape& Track::getInner() const
 {
     return inner;
 }
+
+bool Track::isInsideTrack(const sf::FloatRect& carBounds) const {
+    // Road is the area between outer and inner rectangles
+    sf::FloatRect outerBounds = outer.getGlobalBounds();
+    sf::FloatRect innerBounds = inner.getGlobalBounds();
+
+    // Check if car is inside outer rectangle
+    bool insideOuter = outerBounds.contains(carBounds.left, carBounds.top) &&
+                       outerBounds.contains(carBounds.left + carBounds.width, carBounds.top) &&
+                       outerBounds.contains(carBounds.left, carBounds.top + carBounds.height) &&
+                       outerBounds.contains(carBounds.left + carBounds.width, carBounds.top + carBounds.height);
+
+    // Check if car is outside inner rectangle
+    bool outsideInner = !(innerBounds.contains(carBounds.left, carBounds.top) ||
+                          innerBounds.contains(carBounds.left + carBounds.width, carBounds.top) ||
+                          innerBounds.contains(carBounds.left, carBounds.top + carBounds.height) ||
+                          innerBounds.contains(carBounds.left + carBounds.width, carBounds.top + carBounds.height));
+
+    return insideOuter && outsideInner;
+}

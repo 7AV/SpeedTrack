@@ -6,36 +6,49 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(800, 600), "SFML Racing Game");
     window.setFramerateLimit(60);
 
+//============================================================================================================================================================
+/// Instantiate Objects
+//============================================================================================================================================================    
+
     Car car;
     Track track;
-
     sf::Clock clock;     // for frame timing
+
+//============================================================================================================================================================
     
-    while (window.isOpen()) {
+
+    while (window.isOpen()) 
+    {
         sf::Event event;
-        while (window.pollEvent(event)) {
+        while (window.pollEvent(event)) 
+        {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
 
-        // Time since last frame
-        float deltaTime = clock.restart().asSeconds();
+        float deltaTime = clock.restart().asSeconds();         // Time since last frame
 
-        // Move the car
-        car.handleInput(deltaTime);
+//============================================================================================================================================================
+/// Movement & collision control
+//============================================================================================================================================================        
 
-        // Constrain car within track (simple rectangle logic)
-        sf::FloatRect carBounds = car.getBounds();
-        sf::FloatRect outer = track.getOuter().getGlobalBounds();
-        sf::FloatRect inner = track.getInner().getGlobalBounds();
+        // --- Movement ---
+        sf::Vector2f move(0.f, 0.f);
 
-        // If car is outside the road area (between outer and inner)
-        if (!(carBounds.intersects(inner) || !carBounds.intersects(outer)))
-        {
-            // Push the car back inside
-            // This just moves it back one frame (can refine later)
-            car.handleInput(-deltaTime);
-        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) 
+            move.x -= car.getSpeed() * deltaTime; 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) 
+            move.x += car.getSpeed() * deltaTime;        
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) 
+            move.y -= car.getSpeed() * deltaTime;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) 
+            move.y += car.getSpeed() * deltaTime;
+        
+        car.move(move);
+
+        // --- Collision ---
+
+//============================================================================================================================================================
 
         window.clear(sf::Color::Green);  // background
         track.draw(window);
