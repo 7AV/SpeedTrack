@@ -1,17 +1,16 @@
 #include <SFML/Graphics.hpp>
+#include "Car.hh"
+#include "Track.hh"
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(800, 600), "SFML Racing Game");
     window.setFramerateLimit(60);
 
-    // Car setup
-    sf::RectangleShape car(sf::Vector2f(50.f, 30.f)); // width 50, height 30
-    car.setFillColor(sf::Color::Red);
-    car.setPosition(375.f, 285.f);
+    Car car;
+    Track track;
 
-    float speed = 200.f; // pixels per second
     sf::Clock clock;     // for frame timing
-
+    
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -22,19 +21,25 @@ int main() {
         // Time since last frame
         float deltaTime = clock.restart().asSeconds();
 
-        // Input handling
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-            car.move(0.f, -speed * deltaTime);
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-            car.move(0.f, speed * deltaTime);
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-            car.move(-speed * deltaTime, 0.f);
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-            car.move(speed * deltaTime, 0.f);
+        // Move the car
+        car.handleInput(deltaTime);
 
+        // Constrain car within track (simple rectangle logic)
+        sf::FloatRect carBounds = car.getBounds();
+        sf::FloatRect outer = track.getOuter().getGlobalBounds();
+        sf::FloatRect inner = track.getInner().getGlobalBounds();
 
-        window.clear(sf::Color::Blue);  // background
-        window.draw(car);               // draw car
+        // If car is outside the road area (between outer and inner)
+        if (!(carBounds.intersects(inner) || !carBounds.intersects(outer)))
+        {
+            // Push the car back inside
+            // This just moves it back one frame (can refine later)
+            car.handleInput(-deltaTime);
+        }
+
+        window.clear(sf::Color::Green);  // background
+        track.draw(window);
+        car.draw(window);
         window.display();
     }
 
