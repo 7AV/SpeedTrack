@@ -5,13 +5,14 @@ class Track
 {
     public:
         Track();
-        void draw(sf::RenderWindow& window);
-        const sf::RectangleShape& getOuter() const;
-        const sf::RectangleShape& getInner() const;
+        void draw(sf::RenderWindow& window) const;
+        const sf::ConvexShape& getOuter() const;
+        const sf::ConvexShape& getInner() const;
         bool isInsideTrack(const sf::FloatRect& carBounds) const;
+        sf::Vector2f getConvexShapeSize(const sf::ConvexShape& shape);
 
     private:
-        sf::RectangleShape outer;
-        sf::RectangleShape inner;
+        sf::ConvexShape outer;
+        sf::ConvexShape inner;
 
 };

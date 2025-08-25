@@ -5,11 +5,21 @@
 Car::Car()
 {
     // Car setup
-    shape.setSize(sf::Vector2f(50.f, 30.f)); // width 50, height 30
-    shape.setFillColor(sf::Color::Red);
-    shape.setPosition(375.f, 285.f);
-    shape.setOrigin(shape.getSize().x / 2.f, shape.getSize().y / 2.f); // This ensures rotation happens around the middle of the car
+    // shape.setSize(sf::Vector2f(50.f, 30.f)); // width 50, height 30
+    // shape.setFillColor(sf::Color::Red);
+    // shape.setPosition(375.f, 285.f);
+    // shape.setOrigin(shape.getSize().x / 2.f, shape.getSize().y / 2.f); // This ensures rotation happens around the middle of the car
     
+    // Load car texture
+    if (!texture.loadFromFile("assets/f1.png"))
+    {
+        // Handle error
+        std::cerr << "Failed to load car texture!" << std::endl;
+    }
+
+    sprite.setTexture(texture);
+    sprite.setPosition(400.f, 300.f); // Start position
+
     acceleration = 300.f;
     maxSpeed = 500.f;    // pixels per second 
     velocity = 0.f;
@@ -49,17 +59,17 @@ void Car::handleInput(float deltaTime, float rotationSpeed)
 
 void Car::draw(sf::RenderWindow& window)
 {
-    window.draw(shape);
+    window.draw(sprite);
 }
 
 void Car::move(const sf::Vector2f& offset)
 {
-    shape.move(offset);
+    sprite.move(offset);
 }
 
 void Car::rotate(float angle)
 {
-    shape.rotate(angle);
+    sprite.rotate(angle);
 }
 
 
@@ -76,12 +86,14 @@ sf::Vector2f Car::getDirection() const
 
 sf::Vector2f Car::getPosition() const
 {
-    return shape.getPosition();
+    return sprite.getPosition();
 }
 
 sf::Vector2f Car::getSize() const
 {
-    return shape.getSize();
+    sf::FloatRect bounds = sprite.getLocalBounds();
+    return sf::Vector2f(bounds.width, bounds.height);
+    //return shape.getSize();
 }
 
 sf::FloatRect Car::getBounds() const

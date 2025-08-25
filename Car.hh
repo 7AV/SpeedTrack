@@ -27,6 +27,8 @@ class Car
 
     private:        
         sf::RectangleShape shape;
+        sf::Sprite sprite;
+        sf::Texture texture;
         float acceleration;
         float maxSpeed;
         float velocity;
