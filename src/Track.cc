@@ -62,7 +62,8 @@ sf::Vector2f Track::getConvexShapeSize(const sf::ConvexShape& shape)
     float minY = shape.getPoint(0).y;
     float maxY = shape.getPoint(0).y;
 
-    for (size_t i = 1; i < shape.getPointCount(); ++i) {
+    for (size_t i = 1; i < shape.getPointCount(); ++i) 
+    {
         sf::Vector2f p = shape.getPoint(i);
         if (p.x < minX) minX = p.x;
         if (p.x > maxX) maxX = p.x;
