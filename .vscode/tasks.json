@@ -6,9 +6,10 @@
             "type": "shell",
             "command": "g++",
             "args": [
-                "main.cpp",
-                "Car.cc",
-                "Track.cc",
+                "-Iinclude",
+                "src/main.cc",
+                "src/Car.cc",
+                "src/Track.cc",
                 "-o", "game",
                 "-lsfml-graphics",
                 "-lsfml-window",

@@ -18,8 +18,10 @@ Car::Car()
     }
 
     sprite.setTexture(texture);
+    sf::Vector2u texSize = texture.getSize();
     sprite.setPosition(400.f, 300.f); // Start position
-
+    sprite.setRotation(90.f);
+    sprite.setOrigin(texSize.x / 2.f, texSize.y / 2.f);
     acceleration = 300.f;
     maxSpeed = 500.f;    // pixels per second 
     velocity = 0.f;
@@ -50,7 +52,7 @@ void Car::handleInput(float deltaTime, float rotationSpeed)
     // Move along facing direction
     sf::Vector2f dir = getDirection();
     sf::Vector2f movement(dir.x * velocity * deltaTime, dir.y * velocity * deltaTime);
-    shape.move(movement);    
+    sprite.move(movement);    
 
     // Debugging
     //std::cout << "Velocity: " << velocity << '\n';
@@ -80,7 +82,7 @@ void Car::rotate(float angle)
 sf::Vector2f Car::getDirection() const
 {
     float pi = M_PI;
-    float rad = shape.getRotation() * pi / 180.f;
+    float rad = sprite.getRotation() * pi / 180.f;
     return sf::Vector2f(std::cos(rad), std::sin(rad));
 }
 
@@ -98,7 +100,7 @@ sf::Vector2f Car::getSize() const
 
 sf::FloatRect Car::getBounds() const
 {
-    return shape.getGlobalBounds();
+    return sprite.getGlobalBounds();
 }
 
 float Car::getSpeed() const
@@ -112,5 +114,5 @@ float Car::getSpeed() const
 
 void Car::setPosition(const sf::Vector2f& pos)
 {
-    shape.setPosition(pos);
+    sprite.setPosition(pos);
 }
